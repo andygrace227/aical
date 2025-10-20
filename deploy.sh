@@ -1,0 +1,1 @@
+rsync -avz --delete --progress ./out/ root@andygrace.space:/var/www/cal
