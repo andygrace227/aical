@@ -2,6 +2,7 @@
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useCalendarStore } from "../store/CalendarStore";
+import Backend from "../api/Backend";
 
 /**
  * This is the main screen of the app that appears when you need to register a calendar URL.
@@ -14,15 +15,8 @@ export default function ICSRegister() {
 
     const validateURL = async () => {
         try {
-            const response = await fetch(compUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const icsData = await response.text();
-            console.log("ICS data:", icsData);
-
+            const icsData = Backend.fetchICS(compUrl)
             setUrl(compUrl)
-
         } catch (err) {
             setValidationErrors(err.toString());
         }

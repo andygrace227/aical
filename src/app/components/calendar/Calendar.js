@@ -21,7 +21,13 @@ export default function Calendar() {
     const keyDate = new Date(currentDate);
     keyDate.setHours(0, 0, 0, 0);
 
-    let dayEvents = events[keyDate.getTime()];
+        let dayEvents = undefined;
+
+    if (events != null) {
+        dayEvents = events[keyDate.getTime()];
+
+    }
+
 
     queueMicrotask(() => {
         setCurrentDayEvents(dayEvents);

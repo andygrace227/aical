@@ -1,6 +1,7 @@
 'use client';
 import { create } from "zustand";
 import ICAL from "ical.js";
+import Backend from "../api/Backend";
 
 /**
  * Calendar storage. This is used for storing all the information about the calendar and adding new events.
@@ -39,8 +40,11 @@ export const useCalendarStore = create((set, get) => ({
         try {
             const state = localStorage.getItem("calendar");
             if (state != null){
-                set(JSON.parse(state))
+                let stateParsed = JSON.parse(state);
+                stateParsed["events"] = undefined;
+                set(stateParsed)
             }
+            get().refresh()
 
         } catch (e) {
             console.log("Failed to load the state." + e)
@@ -56,11 +60,7 @@ export const useCalendarStore = create((set, get) => ({
         set({ ...get(), isRefreshing: true });
 
         try {
-            const response = await fetch(get().icalURL);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const icsData = await response.text();
+            const icsData = await Backend.fetchICS(get().icalURL);
 
             let events = {};
 

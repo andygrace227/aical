@@ -2,7 +2,7 @@
 class Backend {
 
     constructor() {
-        this.TEXT_ENDPOINT = "https://api.andygrace.space/ai/text/completionStream"
+        this.TEXT_ENDPOINT = "https://api.andygrace.space/ai/text/completionStream";
     }
 
     /**
@@ -38,6 +38,30 @@ class Backend {
         }
     }
 
+    /**
+     * Fetch an ICS link through a proxy.
+     */
+    static async fetchICS(calendarURL) {
+        const ICS_GET_ENDPOINT = "https://api.andygrace.space/cal/fetchICS";
+        try {
+            const request = {
+                icsUrl : calendarURL
+            };
+            const response = await fetch(ICS_GET_ENDPOINT,
+                {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(request)
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return await response.text();
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default Backend;
